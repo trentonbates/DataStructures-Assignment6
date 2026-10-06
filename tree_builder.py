@@ -6,9 +6,10 @@ class EmployeeNode:
         left (EmployeeNode): The left child node, representing the left subordinate.
         right (EmployeeNode): The right child node, representing the right subordinate.
     '''
-
-    # Delete this line and implement the class below
-    pass
+    def __init_(self, emp_name):
+        self.name = emp_name
+        self.left = None
+        self.right = None
 
 class TeamTree:
     '''
@@ -18,21 +19,58 @@ class TeamTree:
     Methods:
         insert(manager_name, employee_name, side, current_node=None): Inserts a new employee under the specified manager.
         print_tree(node=None, level=0): Prints the tree structure starting from the given node.
-
     '''
-    
-    # Delete this line and implement the class below
-    pass
+    def __init__(self):
+        self.root = None
 
-# Test your code here
+    def insert(self, manager_name, employee_name, side, current_node=None):
+        if self.root is None:
+            print("Tree is empty. Cannot insert without root.")
+            return None
 
+        if current_node is None:
+            current_node = self.root
 
+        if current_node.value == manager_name:
+            if side == "left" and current_node.value is None:
+                current_node.left = EmployeeNode(employee_name)
+                print(f"{employee_name} added under {manager_name} on the left.")
+                return True
+            elif side == "right" and current_node.value is None:
+                current_node.value = EmployeeNode(employee_name)
+                print(f"{employee_name} added under {manager_name} on the right.")
+                return True
+            else:
+                print(f"{manager_name} already has a {side} subordinate.")
+                return True
 
+        found_left = False
+        found_right = False
 
+        if current_node.left:
+            found_left = self.insert(manager_name, employee_name, side, current_node.left)
 
+        if current_node.right and not found_left:
+            found_right = self.insert(manager_name, employee_name, side, current_node.right)
 
+        if not(found_left or found_right):
+            if current_node == self.root:
+                print(f"Manager node {manager_name} not found in the tree.")
+            return False
+        return True
 
+    def print_tree(self, node=None, level=0):
+        if node is None:
+            if level == 0:
+                node = self.root
+            else:
+                return
 
+        indent = "    " * level
+        print(f"-{node.value}")
+
+        self.print_tree(node.left, level + 1)
+        self.print_tree(node.right, level + 1)
 
 # CLI functionality
 def company_directory():
